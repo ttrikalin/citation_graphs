@@ -381,7 +381,7 @@ class Browser:
 
 ######################################################################### end Class
 
-def getPubMedPyData( baseDir, limit=None ):
+def getPubMedPyData( baseDir, limit_low=None, limit_high=None ):
     i=0
     data = defaultdict(dict)
     #items = ['AU','TI']
@@ -392,13 +392,17 @@ def getPubMedPyData( baseDir, limit=None ):
     if files[0] == '.DS_Store':   # the OSX indexing file
         files = files[1:]
 #
-    if limit is None:   
-        LIMIT = len(files)
+    if limit_high is None:   
+        LIMIT_H = len(files)
     else:               
-        LIMIT = limit
+        LIMIT_H = limit_high
+    if limit_low is None:
+        LIMIT_L = 0
+    else:
+        LIMIT_L = limit_low
     print >>stderr, 'Reading PubMedPy Data...'
 #
-    for pmid in files[:LIMIT]:
+    for pmid in files[LIMIT_L:LIMIT_H]:
         i += 1
         print >>stderr, i, 
         for item in items:
@@ -453,12 +457,18 @@ def main():
     print >>stderr, '\nPrevious Last PMID (considered incomplete): \'' + last + "\'"
     print >>stderr, ''
         
-    pubmed_data = getPubMedPyData( C.PUBMED_DATA_LOCATION, C.DATA_LIMIT )
-    if C.DATA_LIMIT is None:    
-        LAST = len(pubmed_data)
-    else:               
-        LAST = C.DATA_LIMIT
-    for pmid in sorted(pubmed_data.keys())[:LAST]:
+    pubmed_data = getPubMedPyData( C.PUBMED_DATA_LOCATION, C.DATA_LIMIT_L, C.DATA_LIMIT_H )
+    #if C.DATA_LIMIT_H is None:    
+    #    LAST = len(pubmed_data)
+    #else:               
+    #    LAST = C.DATA_LIMIT_H
+    #
+    #if C.DATA_LIMIT_L is None:    
+    #    FIRST = 0
+    #else:               
+    #    FIRST = C.DATA_LIMIT_L
+    #for pmid in sorted(pubmed_data.keys())[FIRST:LAST]:
+    for pmid in sorted(pubmed_data.keys()):
         if pmid in DONE: 
             continue
         article = pubmed_data[pmid]
