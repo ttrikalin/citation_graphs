@@ -1,11 +1,27 @@
-DEFAULT_SAVE_FILENAME = 'savedrecs.bib'
-#SAVE_DIR = 'C:\\Downloads\\'
-#DATA_DIR = 'C:\\Documents and Settings\\TTrikalinos\\Desktop\\test\\corpii\\case1\\citations\\'
-#PUBMED_DATA_LOCATION = 'C:\\Documents and Settings\\TTrikalinos\\Desktop\\test\\corpii\\case1\\'
-SAVE_DIR = '/Users/tom/src/citation_graphs/test/citation_graphs/temp'
-DATA_DIR = '/Users/tom/src/citation_graphs/test/case1/citations'
-PUBMED_DATA_LOCATION = '/Users/tom/src/citation_graphs/test/case1'
-DATA_LIMIT = None
+# the trik_test example!
+import C_login
 
 
-#  /Applications/Firefox.app/Contents/MacOS/firefoxbin -ProfileManager
+if 1==10: 
+    DEFAULT_SAVE_FILENAME = 'savedrecs.bib'
+    SAVE_DIR = 'C:\\Documents and Settings\\TTrikalinos\\Desktop\\test\\Downloads\\'
+    DATA_DIR = 'C:\\Documents and Settings\\TTrikalinos\\Desktop\\citation_graphs\\Results\\omega3\\citations\\'
+    PUBMED_DATA_LOCATION = 'C:\\Documents and Settings\\TTrikalinos\\Desktop\\citation_graphs\\Results\\omega3\\'
+    DATA_LIMIT = None
+else:
+    DEFAULT_SAVE_FILENAME = 'savedrecs.bib'
+    SAVE_DIR = '/Users/tom/src/citation_graphs/temp' 
+    DATA_DIR = '/Users/tom/src/citation_graphs/Results/trik_test/citations' 
+    PUBMED_DATA_LOCATION = '/Users/tom/src/citation_graphs/Results/trik_test'
+    DATA_LIMIT = None
+
+
+
+# if the following two are identical and point to the login page I will login 
+WEB_OF_KNOWLEDGE_URL_LOGIN = 'https://login.ezproxy.library.tufts.edu/login?auth=test&url=http://isiknowledge.com'
+START_URL = WEB_OF_KNOWLEDGE_URL_LOGIN
+IN_TUFTS_NETWORK = False 
+
+LOGIN_USER = C_login.USER
+LOGIN_PASS = C_login.PASS
+
