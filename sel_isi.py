@@ -468,6 +468,8 @@ def main():
     #else:               
     #    FIRST = C.DATA_LIMIT_L
     #for pmid in sorted(pubmed_data.keys())[FIRST:LAST]:
+    
+    counter = 1 
     for pmid in sorted(pubmed_data.keys()):
         if pmid in DONE: 
             continue
@@ -478,6 +480,11 @@ def main():
         browser.run_article( article )
         browser.stop()
         time.sleep(C.DELAY_IN_SECS)
+        counter +=1
+        if (counter % C.DELAY_BATCH_SIZE ==0):
+        	print "Sleeping every ",C.DELAY_BATCH_SIZE, " for ", C.DELAY_PER_BATCH_IN_SECS, "s"
+        	print "This is nap #", counter / C.DELAY_BATCH_SIZE
+        	time.sleep(C.DELAY_PER_BATCH_IN_SECS)
         
 #####################################################################################################################################
 
