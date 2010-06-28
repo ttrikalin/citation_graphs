@@ -477,6 +477,7 @@ def main():
             print 'Next PubMed Article:', article
         browser.run_article( article )
         browser.stop()
+        time.sleep(C.DELAY_IN_SECS)
         
 #####################################################################################################################################
 
