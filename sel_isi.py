@@ -75,7 +75,72 @@ class Browser:
 
 
 
+# this tries to get around the fact that not all articles have the times cited
+# right below the title.  
+# so clicks the title to get to the article-specific page 
+# and then does the usual. 
+# Assumes that the title-specific page has only one "cited by" link 
+# (same link in two places, get the first appearance)
     def get_citedByLink(self, titleSearchString ):
+
+        GOLD_Title = titleSearchString
+        
+        ########## TESTING ONLY ############
+        if in_test(): 
+            titleSearchString = 'AMP-activated protein kinase phosphorylation of endothelial NO synthase.'
+        ####################################
+
+        succ = self.robust_openAndWait(self.url)
+        if not succ: 
+            return None, None
+            
+        self.br.type( 'value(input1)' ,  titleSearchString )
+        self.br.select( 'value(select1)' , 'Title' )    # Choose 'Title' from the dropdown selecting the string search target field
+        self.br.click( """//input[@title='Search']""")  # 
+
+        wait_succ = self.robust_wait()
+        if not wait_succ: 
+            return None, None
+            
+        # Search the html of the results page for a match 
+        html_u = self.br.get_html_source()
+        html = html_u.encode('ascii', 'replace')
+        soup = BeautifulSoup(html)
+        results = soup.findAll('a', {'class':'smallV110'})
+        found = False
+        for r in results:
+            this_title =  str(r.contents[0])
+            print_debug( "[ Do Titles Match? ] : " + this_title )
+            if this_title.strip().lower().rstrip('].').lstrip('[') == GOLD_Title.strip().lower().rstrip('].').lstrip('[') :
+                print_debug( ' [ YES ... FOUND A MATCH ]\n' )
+                try:
+                    #click the title link to go to the paper-specific document
+                    newLink =  "link=" + this_title.strip()
+                    self.br.click(newLink)
+                    
+                    # now find the link for the cited by
+                    html_u2 =  self.br.get_html_source()
+                    html2 = html_u2.encode('ascii', 'replace')
+                    soup2 = BeautifulSoup(html2)
+                    res2 = soup.findAll('a', {'title':'View all of the articles that cite this one'})
+                    citedLink = res2[0]['href']
+                    numCiting = int(res2[0].contents[0])
+                    found = True
+                    break
+                except:
+                    continue
+            else:
+                print_debug( ' [ no ]\n' ) 
+        if found: 
+            return citedLink, numCiting
+        else:
+            return None, None
+
+
+
+#### Tom 
+#### Perhaps this will become obsolete -- see version above
+    def get_citedByLink_OLD(self, titleSearchString ):
 
         GOLD_Title = titleSearchString
         
@@ -130,7 +195,16 @@ class Browser:
             print "openAndWait error occured for %s" , pmid
             return
                 
+        
+        # First try to catch the error "None of the Citing Articles are in your subscription. Click on the "Back" link above to return to the previous page."
+        if (self.br.is_text_present('None of the Citing Articles are in your subscription.') == True) :
+            print 'ISI does not have the citations for this paper'
+            self.create_stub_file(pmid)
+            return
+        
         self.br.select('pageSize', "Show 50 per page" )     ### Max is 50 per page, url tricks wont increase this either
+            
+            
             
         w_succ = self.robust_wait()
         if not w_succ:
@@ -482,9 +556,9 @@ def main():
         time.sleep(C.DELAY_IN_SECS)
         counter +=1
         if (counter % C.DELAY_BATCH_SIZE ==0):
-        	print "Sleeping every ",C.DELAY_BATCH_SIZE, " for ", C.DELAY_PER_BATCH_IN_SECS, "s"
-        	print "This is nap #", counter / C.DELAY_BATCH_SIZE
-        	time.sleep(C.DELAY_PER_BATCH_IN_SECS)
+            print "Sleeping every ",C.DELAY_BATCH_SIZE, " for ", C.DELAY_PER_BATCH_IN_SECS, "s"
+            print "This is nap #", counter / C.DELAY_BATCH_SIZE
+            time.sleep(C.DELAY_PER_BATCH_IN_SECS)
         
 #####################################################################################################################################
 
