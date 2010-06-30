@@ -1,21 +1,19 @@
-# the trik_test example!
-import C_login
+import C_login, os
 
+PROJECT_NAME = 'Proton_beam'
+DATA_LIMIT_H = 3200
+DATA_LIMIT_L = 1600
 
 if 10==10: 
     DEFAULT_SAVE_FILENAME = 'savedrecs.bib'
-    SAVE_DIR = 'C:\\Documents and Settings\\TTrikalinos\\Desktop\\test\\Downloads\\'
-    DATA_DIR = 'C:\\Documents and Settings\\TTrikalinos\\Desktop\\citation_graphs\\Results\\omega3\\citations\\'
-    PUBMED_DATA_LOCATION = 'C:\\Documents and Settings\\TTrikalinos\\Desktop\\citation_graphs\\Results\\omega3\\'
-    DATA_LIMIT_H = None
-    DATA_LIMIT_L = 1254
+    SAVE_DIR ='C:\\Documents and Settings\\TTrikalinos\\Desktop\\test\\Downloads\\'
+    DATA_DIR =  os.path.join('C:\\Documents and Settings\\TTrikalinos\\Desktop\\citation_graphs\\Results\\',PROJECT_NAME, 'citations')
+    PUBMED_DATA_LOCATION = os.path.join('C:\\Documents and Settings\\TTrikalinos\\Desktop\\citation_graphs\\Results\\',PROJECT_NAME)
 else:
     DEFAULT_SAVE_FILENAME = 'savedrecs.bib'
     SAVE_DIR = '/Users/tom/src/citation_graphs/temp' 
-    DATA_DIR = '/Users/tom/src/citation_graphs/Results/omega3/citations' 
-    PUBMED_DATA_LOCATION = '/Users/tom/src/citation_graphs/Results/omega3'
-    DATA_LIMIT_H = None
-    DATA_LIMIT_L = None
+    DATA_DIR = os.path.join('/Users/tom/src/citation_graphs/Results/', PROJECT_NAME, 'citations')
+    PUBMED_DATA_LOCATION = os.path.join('/Users/tom/src/citation_graphs/Results/', PROJECT_NAME)
 
 
 
