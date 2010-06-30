@@ -559,6 +559,9 @@ def main():
             print "Sleeping every ",C.DELAY_BATCH_SIZE, " for ", C.DELAY_PER_BATCH_IN_SECS, "s"
             print "This is nap #", counter / C.DELAY_BATCH_SIZE
             time.sleep(C.DELAY_PER_BATCH_IN_SECS)
+    
+    print '\n\n!!!Completed the task!!!\nShutting the server down'
+    return True
         
 #####################################################################################################################################
 
