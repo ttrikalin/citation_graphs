@@ -4,15 +4,15 @@
 
 # May be convenient to name the 
 
-FILENAME = "omega3.xml"
+FILENAME = "Trikalinos.xml"
 REL_RES_PATH = "Results"
-PROJECT_NAME = "omega3"
+PROJECT_NAME = "trik_test"
 
 from pubmed_functions import * 
 
 # get the xml if not already there 
 # TO DO: automatically fix the filter bug
-#download_from_pubmed(SEARCH, FILENAME, 5000)
+# download_from_pubmed(SEARCH, FILENAME, 5000)
 
 # parse the xml into [pmids, titles, years]
 pmids_titles_years = parse_pubmed_xml(FILENAME)

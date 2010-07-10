@@ -38,21 +38,27 @@ def parse_pubmed_xml(filename):
 
     ids=[]
     titles = []
+    years=[]
     for citation in citations:
         ids.append(citation["MedlineCitation"]["PMID"])
         titles.append(citation["MedlineCitation"]["Article"]["ArticleTitle"])
-
+        #years.append(citation["PubMedData"]["History"]["PubMedPubDate"])
+        list_of_year_dict = citation["PubmedData"]["History"]
+        year = 3000 
+        for d in list_of_year_dict:
+            year = min(year, int(d["Year"]))
+        years.append(year)
+        
     # close the handle!!! 
     in_handle.close()
-    return (ids, titles)
+    return (ids, titles, years)
 
 
 
 
-def prepare_search_files(ids_and_titles, rel_results_path, topic_name):
-
-    '''takes a tuple of a list of pmids and titles and saves them in 
-       the specified path, under "TI" '''
+def prepare_search_files(ids_titles_years, rel_results_path, topic_name):
+    '''takes a tuple of a list of pmids, titles, years and saves them in 
+       the specified path, under "TI" and "YR" respectively'''
     current_path = os.path.abspath(".")
     topic_path  = os.path.join(current_path, rel_results_path, topic_name )
     
@@ -62,14 +68,22 @@ def prepare_search_files(ids_and_titles, rel_results_path, topic_name):
         os.makedirs(topic_path+"/TI")
     except:
         print "Seems that this path exists:\n", topic_path+"/TI"
+    try:
+        os.makedirs(topic_path+"/YR")
+    except:
+        print "Seems that this path exists:\n", topic_path+"/YR"
 
-    os.chdir(topic_path+"/TI")
+    #os.chdir(topic_path+"/TI")
     
-    for i, pmid in enumerate(ids_and_titles[0]):
-        f = open(pmid, 'w')
-        f.write(ids_and_titles[1][i].encode('ascii', 'replace'))
-        f.close()
+    for i, pmid in enumerate(ids_titles_years[0]):
+        f_ti = open(os.path.join(topic_path,'TI',pmid), 'w')
+        f_ti.write(ids_titles_years[1][i].encode('ascii', 'replace'))
+        f_ti.close()
+        
+        f_yr = open(os.path.join(topic_path,'YR',pmid), 'w')
+        f_yr.write(str(ids_titles_years[2][i]))
+        f_yr.close()
 
-    os.chdir(current_path)
+    #os.chdir(current_path)
 
-    print "Done! Data are in:\n", topic_path + "/TI"
+    print "Done! Data are in:\n", topic_path + "[/TI, /YR]"
