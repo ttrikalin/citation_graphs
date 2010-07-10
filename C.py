@@ -1,10 +1,10 @@
-import C_login, os
+import C_login, os, platform
 
 PROJECT_NAME = 'trik_test'
 DATA_LIMIT_H = None
 DATA_LIMIT_L = None
 
-if 10==-10: 
+if (platform.system() != 'Darwin'): 
     DEFAULT_SAVE_FILENAME = 'savedrecs.bib'
     SAVE_DIR ='C:\\Documents and Settings\\TTrikalinos\\Desktop\\test\\Downloads\\'
     DATA_DIR =  os.path.join('C:\\Documents and Settings\\TTrikalinos\\Desktop\\citation_graphs\\Results\\',PROJECT_NAME, 'citations')
