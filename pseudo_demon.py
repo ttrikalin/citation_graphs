@@ -2,8 +2,10 @@ import time
 import sel_isi 
 
 # start after the 90 minute delay
-time.sleep(25*60)
+#time.sleep(25*60)
 
+
+fname = 'crash_log.txt'
 
 goon = True 
 counter =0 
