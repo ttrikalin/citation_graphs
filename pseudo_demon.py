@@ -14,7 +14,9 @@ crash_time_old = time.time()
 
 while goon== True:
     try:
-        sel_isi.main()
+        success = sel_isi.main()
+        if success == True:
+            break
 
     except:
         crash_time_new = time.time()
@@ -26,9 +28,12 @@ while goon== True:
             time.sleep(10)
         if (counter >=2):
             print "Crashed too many times, wait it out for 92 minutes"
+            print crash_time_new
             counter = 0 
             time.sleep(92*60)
 
 
+print "*********************************\n" 
+print "Done "
 
 

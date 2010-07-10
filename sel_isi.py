@@ -28,11 +28,19 @@ class Browser:
         self.br.stop()
 
     def tt_login(self):
-        if C.IN_TUFTS_NETWORK == False :
+        if (C.IN_TUFTS_NETWORK == False) & (C.LOGIN_USER is not None):
             self.br.open(C.WEB_OF_KNOWLEDGE_URL_LOGIN)
             self.br.type("user", C.LOGIN_USER)
             self.br.type("pass", C.LOGIN_PASS)
             self.br.click("submit")
+            self.br.wait_for_page_to_load("20000")
+        if  (C.IN_TUFTS_NETWORK == False) & (C.LOGIN_USER is None):
+            self.br.open(C.WEB_OF_KNOWLEDGE_URL_LOGIN)
+            #self.br.type("user", C.LOGIN_USER)
+            #self.br.type("pass", C.LOGIN_PASS)
+            self.br.type("//input[@name='user' and @type='password']", C.LOGIN_PASS)
+            self.br.click("//div[@id='content']/table[1]/tbody/tr/td[3]/form/table/tbody/tr[3]/td[2]/input")
+            #self.br.click("submit")
             self.br.wait_for_page_to_load("20000")
 
 
@@ -559,6 +567,9 @@ def main():
             print "Sleeping every ",C.DELAY_BATCH_SIZE, " for ", C.DELAY_PER_BATCH_IN_SECS, "s"
             print "This is nap #", counter / C.DELAY_BATCH_SIZE
             time.sleep(C.DELAY_PER_BATCH_IN_SECS)
+    
+    print '\n\n!!!Completed the task!!!\nShutting the server down'
+    return True
         
 #####################################################################################################################################
 
