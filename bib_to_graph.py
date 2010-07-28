@@ -60,16 +60,25 @@ def make_citation_dict(base_dir, corpus_dict):
        of the bib_files and returns the pmids that are cited by the index pmid
        base_dir should be:
        os.path.join(C.PUBMED_DATA_LOCATION, "citations") '''
+       
+    print 'Running make_citation_dict...\n',
     
     D= {}
+    i=0 # for the progress bar
+    n= len(corpus_dict) # for the progress bar
     for index in corpus_dict:
         key, val = find_citedBy_in_corpus(base_dir, corpus_dict, index)
         D[key] = val
-    
+        # this is a progress report
+        if (i%(n/10)==0):
+            print '..',i/(n/10)*10,         
+        i+=1
+
+    print '\n',     
     return D
 
 
-def make_adjacency_matrix_to_file(citation_dict, outfile, useheader=False):
+def write_adjacency_matrix_to_tabed_file(citation_dict, outfile, useheader=False):
     '''This prints out a text version of a citation matrix.
        Header
        ROW = INDEX
@@ -133,16 +142,18 @@ def make_adjacency_matrix(citation_dict):
        ROW = INDEX
        COLUMN = CITED BY INDEX'''
 
+    print 'Running make_adjacency matrix...\n',
+    
     # this is an alphabetized dictionary of PMIDs
-    list = citation_dict.keys()
-    list.sort()
-    n = len(list)
+    pmid_list = citation_dict.keys()
+    pmid_list.sort()
+    n = len(pmid_list)
     D ={}
-    for i, pmid in enumerate(list):
+    for i, pmid in enumerate(pmid_list):
         D[i] = pmid
 
     M=[]   
-    # write each row
+    # write each row - now M is an upper triangular
     for row in range(n):
         row_list = []
         cited_by_list = citation_dict[D[row]]
@@ -153,11 +164,30 @@ def make_adjacency_matrix(citation_dict):
             match = 0
             if re.search(D[col], cited_by_string):
                 match = 1
-
             row_list.append(match)
         
         M.append(row_list)
-
+        # this is a progress report
+        if (row%(n/10)==0):
+            print '..',row/(n/10)*10, 
+            
+    print '\n',
     return D, M
 
 
+#####################################################################################################################################
+
+def main():
+    print 'empty function\n'
+
+
+
+
+
+#####################################################################################################################################
+
+if __name__ == "__main__":
+    pass
+    main()
+
+#####################################################################################################################################

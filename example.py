@@ -4,9 +4,9 @@
 
 # May be convenient to name the 
 
-FILENAME = "omega3.xml"
+FILENAME = "VitE_CVD.xml"
 REL_RES_PATH = "Results"
-PROJECT_NAME = "omega3"
+PROJECT_NAME = "VitE_CVD"
 
 from pubmed_functions import * 
 

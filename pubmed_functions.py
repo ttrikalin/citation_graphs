@@ -32,13 +32,18 @@ def download_from_pubmed(search_term, filename, ret_number):
 
 def parse_pubmed_xml(filename):
     """parse_pubmed_xml(filename): give a Pubmed xml and get back a list with the PMIDs 
-       and a list of the lists of authors """
+       and a list of the lists of authors 
+       all ordered by ascending alphanumerical pmid"""
+
+    print 'Running parse_pubmed_xml...'
+    
     in_handle = open(filename, "r")
     citations = Entrez.parse(in_handle)
 
     ids=[]
     titles = []
     years=[]
+    
     for citation in citations:
         ids.append(citation["MedlineCitation"]["PMID"])
         titles.append(citation["MedlineCitation"]["Article"]["ArticleTitle"])
@@ -51,7 +56,21 @@ def parse_pubmed_xml(filename):
         
     # close the handle!!! 
     in_handle.close()
-    return (ids, titles, years)
+
+    D1={}
+    D2={}
+    for i in range(len(ids)):
+        D1[i]=ids[i]
+        D2[ids[i]]=i
+    
+    ids.sort()
+    titles_sorted = []
+    years_sorted = []
+    for i in range(len(ids)):
+        titles_sorted.append(titles[D2[ids[i]]] )
+        years_sorted.append(years[D2[ids[i]]] )
+    
+    return (ids, titles_sorted, years_sorted)
 
 
 

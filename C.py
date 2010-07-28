@@ -1,6 +1,6 @@
 import C_login, os, platform
 
-PROJECT_NAME = 'trik_test'
+PROJECT_NAME = 'omega3_cvd'
 DATA_LIMIT_H = None
 DATA_LIMIT_L = None
 
