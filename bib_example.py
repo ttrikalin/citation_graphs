@@ -72,7 +72,7 @@ def main():
         os.chdir(current_wd)
     
         print 'Graph constructed succesfully; resides in \n', graph_path
-        return(G,g)
+        return(P_data, D, node_dictionary, M, G, g)
 
     else:
         #pickle objects to the Graph directory
@@ -92,8 +92,9 @@ def main():
         return(P_data, D, node_dictionary, M, G, g)
         
 
+P_data, D, node_dictionary, M, G, g = main()
 
-if (os.path.join(C.PUBMED_DATA_LOCATION,'graph', MY_GML)==False):
-    G,g = main()
-else:
-    P_data, D, node_dictionary, M, G, g = main()
+#if (os.path.join(C.PUBMED_DATA_LOCATION,'graph', MY_GML)==False):
+#    G,g = main()
+#else:
+#    P_data, D, node_dictionary, M, G, g = main()

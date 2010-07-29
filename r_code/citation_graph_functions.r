@@ -40,6 +40,77 @@ gimme.layout<- function(G, offset=0.1, att.name = 'color', att.val='red') {
     return(L)
 } 
 
+is.acyclic <- function(G) {
+    order <- diameter(G)
+    acyclic <- TRUE
+    for (v in 0:(length(V(G))-1)) {
+        v.in <- neighborhood(G, order, v, mode='in')[[1]]
+        v.out <- neighborhood(G, order, v, mode='out')[[1]]
+        n.in <- length(v.in)
+        n.out <- length(v.out)
+        
+        if ((n.in>1) & (n.out>1)) {       # if only the index node in the 'in' or 'out', no problem
+            for (v1 in 2:length(v.in)) {  # the first element is always the index node
+                for (v2 in 2:length(v.out)) {
+                    if ((v.in[v1]==v.out[v2])) {
+                        cat("Found cyclic path for node", v, '!\n')
+                        cat("incoming:", v.in[2:n.in], '\n')
+                        cat("outgoing:", v.out[2:n.out], '\n')
+                        acyclic <- FALSE
+                        return(acyclic)
+                    }
+                }
+            }            
+        }   
+    }
+    return(acyclic)
+}
+
+
+write.pajek.file <- function(G,filename,name='pmid',twomode=1){
+    
+    M <- get.adjacency(G)
+    if (is.null(name)==FALSE) {
+        rownames(M) <- get.vertex.attribute(G, name)
+    }
+    else {
+        rownames(M) <- paste('v',seq(0, dim(M)[1]-1), sep='')
+    }
+    if ((dim(M)[1] == dim(M)[2]) & (twomode!=2)) {
+        write(paste("*Vertices",dim(M)[1]), file = filename);
+        write(paste(seq(1,length=dim(M)[1]),' "',rownames(M),
+            '"',sep=""), file = filename,append=TRUE);
+        write("*Arcs", file = filename,append=TRUE);
+        for (i in 1:dim(M)[1]) {
+            for (j in 1:dim(M)[2]) {
+                if (M[i,j]!=0) {
+                    write(paste(i,j,M[i,j]),
+                        file = filename,append=TRUE)
+                }
+            }
+        }
+    } 
+#    else {
+#        write(paste("*Vertices",sum(dim(M)),dim(M)[1]),
+#            file = filename);
+#        write(paste(1:dim(M)[1],' "',rownames(M),'"',sep=""),
+#            file = filename,append=TRUE);
+#        write(paste(seq(dim(M)[1]+1,length=dim(M)[2]),' "',
+#            colnames(M),'"',sep=""), file = filename,append=TRUE);
+#        write("*Edges", file = filename, append=TRUE);
+#        for (i in 1:dim(M)[1]) {
+#            for (j in 1:dim(M)[2]) {
+#                if (M[i,j]!=0) {
+#                    write(paste(i,j+dim(M)[1],M[i,j]),
+#                        file = filename,append=TRUE)
+#                }
+#            }
+#        }
+#    }
+}
+
+
+
 
 get.vertex.index.from.attribute <- function(G, attribute.value, attribute.name = 'pmid'){
     vertices <- V(G)

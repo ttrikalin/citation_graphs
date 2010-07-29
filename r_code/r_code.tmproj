@@ -16,7 +16,7 @@
 			<key>filename</key>
 			<string>citation_graph_functions.r</string>
 			<key>lastUsed</key>
-			<date>2010-07-27T15:19:28Z</date>
+			<date>2010-07-28T22:35:16Z</date>
 			<key>selected</key>
 			<true/>
 		</dict>
@@ -44,29 +44,29 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>10</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>110</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>66</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>9</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>69</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>14</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>2</integer>
+				<integer>110</integer>
 			</dict>
 		</dict>
 	</dict>
@@ -76,8 +76,8 @@
 		<string>citation_graph_functions.r</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
-	<true/>
+	<false/>
 	<key>windowFrame</key>
-	<string>{{301, 0}, {630, 878}}</string>
+	<string>{{234, 0}, {721, 878}}</string>
 </dict>
 </plist>

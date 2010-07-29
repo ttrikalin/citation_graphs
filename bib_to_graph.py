@@ -115,7 +115,7 @@ def write_adjacency_matrix_to_tabed_file(citation_dict, outfile, useheader=False
             myline = None
         
         cited_by_list = citation_dict[D[row]]
-        cited_by_string = "|".join(cited_by_list)
+        cited_by_string = "A" + "A".join(cited_by_list) + "A"
         
         if cited_by_string == '':   # if empty continue
             f.write(myline+empty_line+'\n')
@@ -124,7 +124,7 @@ def write_adjacency_matrix_to_tabed_file(citation_dict, outfile, useheader=False
         for col in range(n):   # not range(row, n) on purpose
                                # two papers could cite each other rarely!
             match = '0'
-            if re.search(D[col], cited_by_string):
+            if re.search("A" + D[col] + "A", cited_by_string):
                 match ='1'
             myline = myline + "\t" + match
         
@@ -157,12 +157,12 @@ def make_adjacency_matrix(citation_dict):
     for row in range(n):
         row_list = []
         cited_by_list = citation_dict[D[row]]
-        cited_by_string = "|".join(cited_by_list)
+        cited_by_string = "A"+"A".join(cited_by_list)+ "A"
 
         for col in range(n):   # not range(row, n) on purpose
                                # two papers could cite each other rarely!
             match = 0
-            if re.search(D[col], cited_by_string):
+            if re.search("A" + D[col] + "A", cited_by_string):
                 match = 1
             row_list.append(match)
         
