@@ -228,30 +228,37 @@ parse.mesh.string <- function(mesh.string) {
 }
 
 
-
-# FIX THIS
 parse.pub.types.string <- function(pub.type.string) {
     # takes a string of mesh terms separated by '#' and returns boolean 
     # on humans or animals
     
-    rct.terms <- c('randomized controlled trial')
-    review.terms <- c('meta-analysis', 'review')
+    primary.data.terms <- c('randomized controlled trial', 'clinical trial')
+    review.terms <- c('meta-analysis', 'metaanalysis', 'review')
+    commentary.terms <- c('editorial', 'letter')
     
-    humans <- FALSE
-    animals <- FALSE
-    for (ht in 1:length(human.terms)) {
-        if (regexpr(paste('#', human.terms[ht],'#', sep=''), mesh.string, ignore.case=TRUE)[1]==TRUE) {
-            humans <- TRUE
+    primary.data <- FALSE
+    review <- FALSE
+    commentary <- FALSE
+    
+    for (pd in 1:length(primary.data.terms)) {
+        if (regexpr(paste('#', primary.data.terms[pd],'#', sep=''), pub.type.string, ignore.case=TRUE)[1]!=-1) {
+            primary.data <- TRUE
             break
         }
     }
-    for (at in 1:length(animal.terms)) {
-        if (regexpr(paste('#', animal.terms[at],'#', sep=''), mesh.string, ignore.case=TRUE)[1]==TRUE) {
-            animals <- TRUE
+    for (rt in 1:length(review.terms)) {
+        if (regexpr(paste('#', review.terms[rt],'#', sep=''), pub.type.string, ignore.case=TRUE)[1]!=-1) {
+            review <- TRUE
             break
         }
     }
-    return (c(humans=humans, animals=animals))
+    for (ct in 1:length(commentary.terms)) {
+        if (regexpr(paste('#', commentary.terms[ct],'#', sep=''), pub.type.string, ignore.case=TRUE)[1]!=-1) {
+            commentary <- TRUE
+            break
+        }
+    }
+    return (c(primary.data=primary.data, review=review, commentary=commentary))
 }
 
 write.pajek.file.windows <- function(G,filename,name='pmid',twomode=1){
