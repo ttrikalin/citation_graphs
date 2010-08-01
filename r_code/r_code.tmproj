@@ -10,13 +10,13 @@
 			<key>filename</key>
 			<string>01_example.r</string>
 			<key>lastUsed</key>
-			<date>2010-07-31T23:59:33Z</date>
+			<date>2010-08-01T13:42:19Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>citation_graph_functions.r</string>
 			<key>lastUsed</key>
-			<date>2010-08-01T05:36:34Z</date>
+			<date>2010-08-01T13:42:19Z</date>
 			<key>selected</key>
 			<true/>
 		</dict>
@@ -30,9 +30,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>52</integer>
 				<key>line</key>
-				<integer>34</integer>
+				<integer>20</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -44,14 +44,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>64</integer>
+				<integer>22</integer>
 				<key>line</key>
-				<integer>235</integer>
+				<integer>339</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>230</integer>
+			<integer>324</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
@@ -62,6 +62,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<false/>
 	<key>windowFrame</key>
-	<string>{{151, 0}, {721, 878}}</string>
+	<string>{{151, 0}, {904, 878}}</string>
 </dict>
 </plist>

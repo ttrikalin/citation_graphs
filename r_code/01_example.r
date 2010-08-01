@@ -32,3 +32,6 @@ spc.nodes <- V(G)[V(G)$spc.weight>0.01]
 index.nodes <- V(G)[V(G)$is_index==1]
 
 g <- subgraph(G, c(spc.nodes, index.nodes))
+
+G.color <- fix.vertex.colors(G)
+plot(G, layout=gimme.layout(G))

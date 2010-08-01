@@ -41,8 +41,6 @@ gimme.layout<- function(G, offset=0.1, att.name = 'color', att.val='red') {
 } 
 
 
-
-
 is.acyclic <- function(G) {
     order <- diameter(G)
     acyclic <- TRUE
@@ -116,6 +114,9 @@ fix.mutual <- function(G, node1, node2) {
     if (sum((att.list==rep('preprint', length(att.list))))==0) {
         V(G)$preprint <- "None"
     }
+    if (sum((att.list==rep('shape', length(att.list))))==0) {
+        V(G)$shape <- "circle"
+    }
  
    
     # This adds a preprint vertex for node1 if one does not exist 
@@ -125,6 +126,7 @@ fix.mutual <- function(G, node1, node2) {
         V(G)[length(V(G))-1]$preprint="None"  # preprints have no preprints
         V(G)[length(V(G))-1]$size = V(G)[node1]$size  # get the parent size
         V(G)[length(V(G))-1]$is_index = V(G)[node1]$is_index  # get the parent index
+        V(G)[length(V(G))-1]$shape = V(G)[node1]$shape  # get the parent shape
     }
     
     # This adds a preprint vertex for node2 if one does not exist 
@@ -134,6 +136,7 @@ fix.mutual <- function(G, node1, node2) {
         V(G)[length(V(G))-1]$preprint="None"  # preprints have no preprints
         V(G)[length(V(G))-1]$size = V(G)[node2]$size  # get the parent size
         V(G)[length(V(G))-1]$is_index = V(G)[node2]$is_index  # get the parent index
+        V(G)[length(V(G))-1]$shape = V(G)[node2]$shape  # get the parent shape
     }
      
     # This makes the following
@@ -195,17 +198,22 @@ read.pajek.vertex.weights.vec.file <- function (filename) {
     
 }
 
-keep.edges <- function (G, edge.sequence){
-    
+
+keep.edges.NOT.DONE <- function (G, edge.sequence){
     G <- delete.edges(G, E(G))
     print("here")
     G <- add.edge(G, edge.sequence)
     return(G)
 }
 
+
 parse.mesh.string <- function(mesh.string) {
     # takes a string of mesh terms separated by '#' and returns boolean 
     # on humans or animals
+    
+    if (is.na(mesh.string)) {
+        mesh.string <- "#None#"
+    }
     
     human.terms <- c('humans', 'adult', 'aged', 'middle aged', 'male', 'female', 'adolescent', 'infant', 'infant, newborn', 'child', 'child, preschool')
     animal.terms <- c('animals')
@@ -231,6 +239,10 @@ parse.mesh.string <- function(mesh.string) {
 parse.pub.types.string <- function(pub.type.string) {
     # takes a string of mesh terms separated by '#' and returns boolean 
     # on humans or animals
+    
+    if (is.na(pub.type.string)) {
+        pub.type.string <- "#None#"
+    }
     
     primary.data.terms <- c('randomized controlled trial', 'clinical trial')
     review.terms <- c('meta-analysis', 'metaanalysis', 'review')
@@ -260,6 +272,9 @@ parse.pub.types.string <- function(pub.type.string) {
     }
     return (c(primary.data=primary.data, review=review, commentary=commentary))
 }
+
+
+
 
 write.pajek.file.windows <- function(G,filename,name='pmid',twomode=1){
     
@@ -321,6 +336,38 @@ get.vertex.index.from.attribute <- function(G, attribute.value, attribute.name =
     cat("Found no vertex with the specified attribute\n")
     return(NULL)
 }
+
+fix.vertex.colors <- function(G) {
+    
+    vertices <- V(G)
+    for (i in 0:(length(vertices)-1)) {
+        pub.type <- parse.pub.types.string(vertices[i]$pubtypes)
+        mesh <-  parse.mesh.string(vertices[i]$mesh)
+        
+        if (mesh[2]==TRUE & V(G)[i]$is_index==0) { # publications on animals 
+            V(G)[i]$shape='square'
+            #V(G)[i]$color='plum'
+        }
+        
+        if (pub.type[3]==TRUE & V(G)[i]$is_index==0) { # commentaries
+            V(G)[i]$size=2
+            V(G)[i]$color='black'
+        }
+        
+        if (pub.type[2]==TRUE & V(G)[i]$is_index==0) { # reviews may overwrite commentaries
+            #V(G)[i]$size=
+            V(G)[i]$color='green'
+        }
+        #if (pubtype[1]==TRUE & V(G)[i]$is_index==0) { # primary data
+        #    #V(G)[i]$size=
+        #    V(G)[i]$color='green'
+        #}
+        
+    }
+    return(G)
+    
+}
+
 
 clean.my.python.list.string <- function (S) {
     S <- sub("'\\]","", S)
