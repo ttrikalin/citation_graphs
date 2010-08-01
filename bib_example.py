@@ -39,12 +39,12 @@ def main():
         # this is the corpus title dictionary 
         corpus = sel_isi.getPubMedPyData( C.PUBMED_DATA_LOCATION)
 
-        pmid_list, title_list, year_list = pubmed_functions.parse_pubmed_xml(os.path.join(data_path,MY_XML))
+        pmid_list, title_list, year_list, pub_types_list, mesh_list = pubmed_functions.parse_pubmed_xml(os.path.join(data_path,MY_XML))
     
         D= bib_to_graph.make_citation_dict(BASE_DIR, corpus)
         node_dictionary, M = bib_to_graph.make_adjacency_matrix(D)
         G = Graph.Adjacency(M, mode="directed")
-        G = graph_functions.add_standard_attributes_to_all_nodes(G, pmid_list, year_list, title_list, node_dictionary)
+        G = graph_functions.add_standard_attributes_to_all_nodes(G, pmid_list, year_list, title_list, pub_types_list, mesh_list, node_dictionary)
     
         G = graph_functions.set_attributes_for_specific_nodes(G, Search.rct_pmid_list, attribute_name='color', val_true='red', val_false='NA')
         G = graph_functions.set_attributes_for_specific_nodes(G, Search.obs_pmid_list, attribute_name='color', val_true='blue', val_false=None) # essential that val_false=None
@@ -92,9 +92,18 @@ def main():
         return(P_data, D, node_dictionary, M, G, g)
         
 
+#####################################################################################################################################
+
+if __name__ == "__main__":
+    pass
+    main()
+
+#####################################################################################################################################
+
 P_data, D, node_dictionary, M, G, g = main()
 
 #if (os.path.join(C.PUBMED_DATA_LOCATION,'graph', MY_GML)==False):
 #    G,g = main()
 #else:
 #    P_data, D, node_dictionary, M, G, g = main()
+

@@ -40,6 +40,9 @@ gimme.layout<- function(G, offset=0.1, att.name = 'color', att.val='red') {
     return(L)
 } 
 
+
+
+
 is.acyclic <- function(G) {
     order <- diameter(G)
     acyclic <- TRUE
@@ -57,17 +60,204 @@ is.acyclic <- function(G) {
                         cat("incoming:", v.in[2:n.in], '\n')
                         cat("outgoing:", v.out[2:n.out], '\n')
                         acyclic <- FALSE
-                        return(acyclic)
+                        return(c(acyclic=acyclic, node1=v, node2=v.in[v1]))
                     }
                 }
             }            
         }   
     }
-    return(acyclic)
+    return(acyclic=acyclic)
+}
+
+fix.all.preprints <- function (G) {
+    goon <- TRUE
+    count <- 0 
+
+    G<- simplify(G)   # just in case
+
+    while (goon == TRUE) {
+    
+        print(count)
+        
+        check <- is.acyclic(G)
+    
+        if (check[1]==TRUE) {
+            if (count == 0) {
+                print("Graph was acyclic, no modification")
+            }
+            return(G)
+        }
+        
+        G.prime <- fix.mutual(G, check[2], check[3])
+        if (is.null(G.prime)) {
+            cat("Error when checking nodes ", check[2], " and ", check[3], '\n', sep='' )
+            return(NULL)
+        }
+        G <- G.prime
+        count <- count + 1
+    }
+    return(G)
+}
+
+fix.mutual <- function(G, node1, node2) {
+    # fixes the preprint problem for a set of mutual nodes
+    
+    # if the nodes are not mutual, abort
+    if (is.mutual(G, E(G, c(node1, node2)))==FALSE) {
+        cat('Nodes are not mutual.\nfix.mutual(G, ', node1, ', ', node2, ') cannot fix the cyclic path', sep='')
+        return(NULL)
+    }
+    
+    # just in case, simplify
+    G <- simplify(G)   
+    
+    #  first check if there is a preprint or an attribute
+    att.list <- list.vertex.attributes(G)
+    if (sum((att.list==rep('preprint', length(att.list))))==0) {
+        V(G)$preprint <- "None"
+    }
+ 
+   
+    # This adds a preprint vertex for node1 if one does not exist 
+    if (V(G)[node1]$preprint =="None") {
+        G <- add.vertices(G, 1, id=paste('p', node1, sep=''), year=V(G)[node1]$year)
+        V(G)[node1]$preprint=length(V(G))-1   # remember, zero based indexing
+        V(G)[length(V(G))-1]$preprint="None"  # preprints have no preprints
+        V(G)[length(V(G))-1]$size = V(G)[node1]$size  # get the parent size
+        V(G)[length(V(G))-1]$is_index = V(G)[node1]$is_index  # get the parent index
+    }
+    
+    # This adds a preprint vertex for node2 if one does not exist 
+    if (V(G)[node2]$preprint =="None") {
+        G <- add.vertices(G, 1, id=paste('p', node2, sep=''), year=V(G)[node2]$year)
+        V(G)[node2]$preprint=length(V(G))-1   # remember, zero based indexing
+        V(G)[length(V(G))-1]$preprint="None"  # preprints have no preprints
+        V(G)[length(V(G))-1]$size = V(G)[node2]$size  # get the parent size
+        V(G)[length(V(G))-1]$is_index = V(G)[node2]$is_index  # get the parent index
+    }
+     
+    # This makes the following
+    # Transform:
+    #  A -> B
+    #  B -> A
+    #
+    # To:
+    #  A -> pB
+    #  B -> pA
+    #  A -> pA
+    #  B -> pB
+    
+    G <- delete.edges(G, E(G, c(node1, node2)))
+    G <- delete.edges(G, E(G, c(node2, node1)))
+    G <- add.edges(G, c(node1, as.numeric(V(G)[node1]$preprint)))
+    G <- add.edges(G, c(node1, as.numeric(V(G)[node2]$preprint)))
+    G <- add.edges(G, c(node2, as.numeric(V(G)[node1]$preprint)))
+    G <- add.edges(G, c(node2, as.numeric(V(G)[node2]$preprint)))
+    
+    # if any of the nodes had a preprint from a previous correction you'll have 2 edges
+    # simplify!
+    G <- simplify(G)
+    
+    return(G)
 }
 
 
-write.pajek.file <- function(G,filename,name='pmid',twomode=1){
+write.pajek.mat.file <- function(G, filename , name='id', VERBOSE=FALSE) {
+    
+    rs <- paste('*Vertices ', length(V(G)), '\r\n', sep='')
+    for (v in 0:(length(V(G))-1)) {
+        rs <- paste(rs, v+1, ' "', get.vertex.attribute(G, name, v), '"\r\n', sep='')
+    }
+    rs <- paste(rs, '*Arcs ', length(E(G)),'\r\n', sep='') 
+    
+    for (e in 0:(length(E(G))-1)) {   
+        rs <- paste(rs, get.edges(G, E(G)[e])[1]+1, ' ',get.edges(G, E(G)[e])[2]+1, '\r\n',sep='')
+    }
+    
+    write(rs, file=paste(filename, '.mat', sep=''))
+    
+    if (VERBOSE==TRUE) {
+        return(rs)
+    }
+    else {
+        return("Success!")
+    }
+}
+
+read.pajek.vertex.weights.vec.file <- function (filename) {
+    
+    weights <- read.table(filename, skip=1)
+    vertices <- seq(0, length(vector)-1)
+    W <- cbind(vertices, weights)
+    colnames(W) <- c('vertex', 'weight')
+    
+    return(weights=W)
+    
+}
+
+keep.edges <- function (G, edge.sequence){
+    
+    G <- delete.edges(G, E(G))
+    print("here")
+    G <- add.edge(G, edge.sequence)
+    return(G)
+}
+
+parse.mesh.string <- function(mesh.string) {
+    # takes a string of mesh terms separated by '#' and returns boolean 
+    # on humans or animals
+    
+    human.terms <- c('humans', 'adult', 'aged', 'middle aged', 'male', 'female', 'adolescent', 'infant', 'infant, newborn', 'child', 'child, preschool')
+    animal.terms <- c('animals')
+    
+    humans <- FALSE
+    animals <- FALSE
+    for (ht in 1:length(human.terms)) {
+        if (regexpr(paste('#', human.terms[ht],'#', sep=''), mesh.string, ignore.case=TRUE)[1]!=-1) {
+            humans <- TRUE
+            break
+        }
+    }
+    for (at in 1:length(animal.terms)) {
+        if (regexpr(paste('#', animal.terms[at],'#', sep=''), mesh.string, ignore.case=TRUE)[1]!=-1) {
+            animals <- TRUE
+            break
+        }
+    }
+    return (c(humans=humans, animals=animals))
+}
+
+
+
+# FIX THIS
+parse.pub.types.string <- function(pub.type.string) {
+    # takes a string of mesh terms separated by '#' and returns boolean 
+    # on humans or animals
+    
+    rct.terms <- c('randomized controlled trial')
+    review.terms <- c('meta-analysis', 'review')
+    
+    humans <- FALSE
+    animals <- FALSE
+    for (ht in 1:length(human.terms)) {
+        if (regexpr(paste('#', human.terms[ht],'#', sep=''), mesh.string, ignore.case=TRUE)[1]==TRUE) {
+            humans <- TRUE
+            break
+        }
+    }
+    for (at in 1:length(animal.terms)) {
+        if (regexpr(paste('#', animal.terms[at],'#', sep=''), mesh.string, ignore.case=TRUE)[1]==TRUE) {
+            animals <- TRUE
+            break
+        }
+    }
+    return (c(humans=humans, animals=animals))
+}
+
+write.pajek.file.windows <- function(G,filename,name='pmid',twomode=1){
+    
+    # this will work only on windows machines, because the EOL in other machines
+    # is \n and not \r\n as pajek expects
     
     M <- get.adjacency(G)
     if (is.null(name)==FALSE) {

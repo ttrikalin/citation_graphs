@@ -32,7 +32,7 @@ def download_from_pubmed(search_term, filename, ret_number):
 
 def parse_pubmed_xml(filename):
     """parse_pubmed_xml(filename): give a Pubmed xml and get back a list with the PMIDs 
-       and a list of the lists of authors 
+       titles, years, string of publication types, and string of mesh headings
        all ordered by ascending alphanumerical pmid"""
 
     print 'Running parse_pubmed_xml...'
@@ -43,11 +43,29 @@ def parse_pubmed_xml(filename):
     ids=[]
     titles = []
     years=[]
+    pub_types =[]
+    mesh = []
     
     for citation in citations:
         ids.append(citation["MedlineCitation"]["PMID"])
         titles.append(citation["MedlineCitation"]["Article"]["ArticleTitle"])
-        #years.append(citation["PubMedData"]["History"]["PubMedPubDate"])
+        
+        # fix string of publication types -- easyt to find specific pubtypes with re.search
+        str_pub_type = "#" + "#".join(citation["MedlineCitation"]["Article"]["PublicationTypeList"]) + "#"
+        pub_types.append(str_pub_type)
+        
+        #fix list of mesh headings 
+        try: 
+            mesh_list_of_dicts = citation["MedlineCitation"]["MeshHeadingList"]
+            mesh_headings = []
+            for i, mh in enumerate(mesh_list_of_dicts):
+                mesh_headings.append(mh['DescriptorName'])
+            str_mesh = "#" + "#".join(mesh_headings) + "#"
+        except:
+            str_mesh = "#none#"
+        mesh.append(str_mesh)
+        
+        # fix years 
         list_of_year_dict = citation["PubmedData"]["History"]
         year = 3000 
         for d in list_of_year_dict:
@@ -66,11 +84,16 @@ def parse_pubmed_xml(filename):
     ids.sort()
     titles_sorted = []
     years_sorted = []
+    pub_types_sorted =[]
+    mesh_sorted =[]
+    
     for i in range(len(ids)):
         titles_sorted.append(titles[D2[ids[i]]] )
         years_sorted.append(years[D2[ids[i]]] )
+        pub_types_sorted.append(pub_types[D2[ids[i]]])
+        mesh_sorted.append(mesh[D2[ids[i]]])
     
-    return (ids, titles_sorted, years_sorted)
+    return (ids, titles_sorted, years_sorted, pub_types_sorted, mesh_sorted)
 
 
 
