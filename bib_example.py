@@ -4,6 +4,7 @@ from igraph import *
 
 MY_XML = 'Pubmed.xml'
 MY_GML = 'Graph.xml'
+MY_INITIAL_GML = 'Graph.initial.xml'
 BASE_DIR = os.path.join(C.PUBMED_DATA_LOCATION, "citations") 
 
 def main():
@@ -48,17 +49,20 @@ def main():
     
         G = graph_functions.set_attributes_for_specific_nodes(G, Search.rct_pmid_list, attribute_name='color', val_true='red', val_false='NA')
         G = graph_functions.set_attributes_for_specific_nodes(G, Search.obs_pmid_list, attribute_name='color', val_true='blue', val_false=None) # essential that val_false=None
+
     
         # add the rcts and obs list, the search string, date, size, and the topic title
         graph_functions.add_graph_attributes(G, ['rct_pmid_list', 'obs_pmid_list', 'search_string', 'search_date', 'corpus_size', 'topic_name'], [Search.rct_pmid_list, Search.obs_pmid_list, Search.search_string, Search.search_date, Search.corpus_size, Search.topic_name] )
-
+        
         g = graph_functions.isolate_subcomponents_based_on_node_list(G, ALL_INDEX_PMIDS)
 
         if (os.path.isdir(graph_path)==False ):
             os.makedirs(graph_path)
             
         g.write(os.path.join(graph_path, MY_GML), format='graphml')
-    
+        G.write(os.path.join(graph_path, MY_INITIAL_GML), format='graphml')
+        
+        
         #pickle objects to the Graph directory
         os.chdir(graph_path)
         P_data = '[P_data, D, node_dictionary, M, G, g]'

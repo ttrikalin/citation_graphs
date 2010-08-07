@@ -3,65 +3,144 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>citation_graph_functions.r</string>
+	<string>01_import_graph.r</string>
 	<key>documents</key>
 	<array>
 		<dict>
 			<key>filename</key>
-			<string>01_example.r</string>
+			<string>01_import_graph.r</string>
 			<key>lastUsed</key>
-			<date>2010-08-01T13:42:19Z</date>
+			<date>2010-08-05T22:25:15Z</date>
+			<key>selected</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>04_shortest_paths.r</string>
+			<key>lastUsed</key>
+			<date>2010-08-05T22:22:46Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>03_analysis.r</string>
+			<key>lastUsed</key>
+			<date>2010-08-05T22:25:15Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>02_analysis1.r</string>
+			<key>lastUsed</key>
+			<date>2010-08-05T22:10:00Z</date>
 		</dict>
 		<dict>
 			<key>filename</key>
 			<string>citation_graph_functions.r</string>
 			<key>lastUsed</key>
-			<date>2010-08-01T13:42:19Z</date>
-			<key>selected</key>
-			<true/>
+			<date>2010-08-05T22:17:38Z</date>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
 	<integer>200</integer>
 	<key>metaData</key>
 	<dict>
-		<key>01_example.r</key>
+		<key>01_import_graph.r</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>52</integer>
-				<key>line</key>
 				<integer>20</integer>
+				<key>line</key>
+				<integer>18</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>13</integer>
+		</dict>
+		<key>02_analysis1.r</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>43</integer>
+				<key>line</key>
+				<integer>41</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
+		</dict>
+		<key>03_analysis.r</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>14</integer>
+				<key>line</key>
+				<integer>19</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>04_shortest_paths.r</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>31</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>22</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>31</integer>
+			</dict>
 		</dict>
 		<key>citation_graph_functions.r</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>22</integer>
+				<integer>25</integer>
 				<key>line</key>
-				<integer>339</integer>
+				<integer>489</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>324</integer>
+			<integer>458</integer>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>01_example.r</string>
+		<string>02_analysis1.r</string>
+		<string>03_analysis.r</string>
+		<string>04_shortest_paths.r</string>
+		<string>01_import_graph.r</string>
 		<string>citation_graph_functions.r</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
-	<false/>
+	<true/>
 	<key>windowFrame</key>
-	<string>{{151, 0}, {904, 878}}</string>
+	<string>{{73, 0}, {904, 878}}</string>
 </dict>
 </plist>

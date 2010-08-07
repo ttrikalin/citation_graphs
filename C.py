@@ -1,6 +1,6 @@
 import C_login, os, platform
 
-PROJECT_NAME = 'omega3_cvd'
+PROJECT_NAME = 'folic_stroke'
 DATA_LIMIT_H = None
 DATA_LIMIT_L = None
 

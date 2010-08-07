@@ -1,6 +1,6 @@
 import cookielib
 from collections import defaultdict
-import os, sys
+import os, sys, re
 from sys import exit, stdin, stdout, stderr
 from BeautifulSoup import BeautifulSoup
 from selenium import selenium
@@ -28,19 +28,11 @@ class Browser:
         self.br.stop()
 
     def tt_login(self):
-        if (C.IN_TUFTS_NETWORK == False) & (C.LOGIN_USER is not None):
+        if C.IN_TUFTS_NETWORK == False :
             self.br.open(C.WEB_OF_KNOWLEDGE_URL_LOGIN)
             self.br.type("user", C.LOGIN_USER)
             self.br.type("pass", C.LOGIN_PASS)
             self.br.click("submit")
-            self.br.wait_for_page_to_load("20000")
-        if  (C.IN_TUFTS_NETWORK == False) & (C.LOGIN_USER is None):
-            self.br.open(C.WEB_OF_KNOWLEDGE_URL_LOGIN)
-            #self.br.type("user", C.LOGIN_USER)
-            #self.br.type("pass", C.LOGIN_PASS)
-            self.br.type("//input[@name='user' and @type='password']", C.LOGIN_PASS)
-            self.br.click("//div[@id='content']/table[1]/tbody/tr/td[3]/form/table/tbody/tr[3]/td[2]/input")
-            #self.br.click("submit")
             self.br.wait_for_page_to_load("20000")
 
 
@@ -119,7 +111,8 @@ class Browser:
         for r in results:
             this_title =  str(r.contents[0])
             print_debug( "[ Do Titles Match? ] : " + this_title )
-            if this_title.strip().lower().rstrip('].').lstrip('[') == GOLD_Title.strip().lower().rstrip('].').lstrip('[') :
+            #if this_title.strip().lower().rstrip('].').lstrip('[').rstrip('.').rstrip('?').rstrip('!') == GOLD_Title.strip().lower().rstrip('].').lstrip('[').rstrip('.').rstrip('?').rstrip('!') :
+            if re.sub('[\t\r\n,-.\]\[ \{\}\(\)!?:]', '', this_title.lower()) == re.sub('[\t\r\n,-.\]\[ \{\}\(\)!?:]', '', GOLD_Title.lower()) :
                 print_debug( ' [ YES ... FOUND A MATCH ]\n' )
                 try:
                     #click the title link to go to the paper-specific document
